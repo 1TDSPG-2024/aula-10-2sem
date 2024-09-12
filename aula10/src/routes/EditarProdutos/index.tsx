@@ -31,6 +31,14 @@ export default function EditarProdutos(){
         }
       }, [])
 
+      const handleChange = (e:React.ChangeEvent) => {
+
+        // Destructuring do evento com o target pegando os seguintes dados do input:
+        // name e value
+        const {name, value} = e.target as HTMLInputElement;
+        setProdEditar({...prodEditar, [name]:value})
+      }
+
       const handleSubmit = (evento:React.FormEvent<HTMLFormElement>) => {
 
         evento.preventDefault();
@@ -57,15 +65,15 @@ export default function EditarProdutos(){
           <form onSubmit={handleSubmit}>
             <div>
               <label>Nome:</label>
-              <input type="text" name="nome" value={prodEditar?.nome}  onChange={(e)=> setProdEditar({...prodEditar, nome:e.target.value})} />
+              <input type="text" name="nome" value={prodEditar?.nome}  onChange={(e)=>handleChange(e)} />
             </div>
             <div>
               <label>Preço:</label>
-              <input type="number" name="preco" value={prodEditar?.preco} onChange={(e)=> setProdEditar({...prodEditar, preco: parseFloat(e.target.value)})}/>
+              <input type="number" name="preco" value={prodEditar?.preco} onChange={(e)=>handleChange(e)}/>
             </div>
             <div>
               <label>Descrição:</label>
-              <textarea name="desc" value={prodEditar?.desc} onChange={(e)=> setProdEditar({...prodEditar, desc:e.target.value})}/>
+              <textarea name="desc" value={prodEditar?.desc} onChange={(e)=>handleChange(e)}/>
             </div>
             <div>
               <figure>
