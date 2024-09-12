@@ -25,7 +25,7 @@ export default function Produtos() {
             <th>Preço</th>
             <th>Descrição</th>
             <th>Imagem</th>
-            <th>Editar</th>
+            <th>Editar | Excluir</th>
           </tr>
         </thead>
         <tbody>
@@ -36,7 +36,7 @@ export default function Produtos() {
               <td>{produto.preco}</td>
               <td>{produto.desc}</td>
               <td><img src={produto.imagem} alt={produto.nome} /></td>
-              <td><Link to={`/editar/produtos/${produto.id}`}>Editar</Link></td>
+              <td><Link to={`/editar/produtos/${produto.id}`}>Editar</Link> | <Link to={`/excluir/produtos/${produto.id}`}>Excluir</Link></td>
             </tr>
           ))}
         </tbody>
