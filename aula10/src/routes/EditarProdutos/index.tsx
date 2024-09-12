@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import { Lista } from "../../types";
 import { useEffect, useState } from "react";
+
 
 export default function EditarProdutos(){
 
@@ -13,25 +14,38 @@ export default function EditarProdutos(){
       //Então teriamos que realizar a seguinte ação para receber esta informação.
       // const{dados} = useParams(), um detalhe aqui é que o useParams() pertence ao react-router e deve ser importado dele
       const {id} = useParams();
+
+      const navigate = useNavigate() 
  
       const listaProdutosString = localStorage.getItem("lista") || '[]';
       const lista:Lista[] = JSON.parse(listaProdutosString);
 
-      const [produto, setProduto] = useState<Lista>();
 
-      const [prodEditar, setProdEditar] = useState(
-        {
-          id: Number(id),
-          nome: "",
-          preco: 0,
-          desc:"",
-          imagem:""
+      const[prodEditar, setProdEditar] = useState<Lista>({
+        id: 0,
+        nome: "",
+        preco: 0.0,
+        desc:"",
+        imagem:"",
+      });
+
+      useEffect(() => {
+        
+       
+        const objSelecionado = lista.find(p => p.id == Number(id))
+        if(objSelecionado){
+        setProdEditar(objSelecionado);
         }
-      );
-   
-      useEffect(()=>{
-        setProduto(lista.find((prod) => prod.id === Number(id)));
-      },[]);
+      }, [])
+      
+
+      const handleChange = (e:React.ChangeEvent) => {
+        e.preventDefault()
+        //Destructuring do evento com o target pegando os seguintes dados do input:
+        //name e value
+        const {name, value} = e.target as HTMLInputElement;
+        setProdEditar({...prodEditar, [name]:value})
+      }
 
       const handleSubmit = (evento:React.FormEvent<HTMLFormElement>) => {
 
@@ -47,6 +61,7 @@ export default function EditarProdutos(){
           lista.splice(indexProduto,1,prodEditar);
           localStorage.setItem("lista", JSON.stringify(lista));
           alert("Produto editado com sucesso!");
+          navigate("/produtos")
         }else{
           alert("Erro ao editar produto!");
         }
@@ -61,20 +76,21 @@ export default function EditarProdutos(){
           <form onSubmit={handleSubmit}>
             <div>
               <label>Nome:</label>
-              <input type="text" name="nome" value={prodEditar?.nome}  onChange={(e)=> setProdEditar({...prodEditar, nome:e.target.value})} />
+              <input type="text" name="nome" value={prodEditar?.nome}  onChange={(e) => handleChange(e)} />
             </div>
             <div>
               <label>Preço:</label>
-              <input type="number" name="preco" value={prodEditar?.preco} onChange={(e)=> setProdEditar({...prodEditar, nome:e.target.value})}/>
+              <input type="number" name="preco" value={prodEditar?.preco} onChange={(e) => handleChange(e)}/>
             </div>
             <div>
               <label>Descrição:</label>
-              <textarea name="desc" value={prodEditar?.desc} onChange={(e)=> setProdEditar({...prodEditar, nome:e.target.value})}/>
+              <textarea name="desc" value={prodEditar?.desc} onChange={(e) => handleChange(e)}/>
             </div>
             <div>
               <figure>
                 <img src={prodEditar?.imagem} alt={prodEditar?.desc} />
               </figure>
+              <button type="submit">Editar</button>
             </div>
             <div>
               <button type="submit">Editar</button>
